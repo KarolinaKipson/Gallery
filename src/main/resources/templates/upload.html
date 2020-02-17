@@ -19,7 +19,9 @@
 			</table>
 		</form>
 	</div>
-
+    <div>
+	 <h3 th:text="'Current price is: $' + ${price}"> </h3>
+	</div>
 	<div th:each="file : ${files}">
 		<div class="gallery">
 			<a target="_blank" th:href="${file}"> <img th:src="${file}"

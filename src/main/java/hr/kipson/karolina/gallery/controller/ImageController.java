@@ -3,6 +3,7 @@ package hr.kipson.karolina.gallery.controller;
 import hr.kipson.karolina.gallery.LoggerImage;
 import hr.kipson.karolina.gallery.model.Image;
 import hr.kipson.karolina.gallery.model.SiteUser;
+import hr.kipson.karolina.gallery.pricing.BillingStrategy;
 import hr.kipson.karolina.gallery.repository.ImageRepository;
 import hr.kipson.karolina.gallery.repository.SiteUserRepository;
 
@@ -49,7 +50,6 @@ public class ImageController {
 
     @GetMapping("/")
     public String listUploadedFiles(Model model, Principal principal) throws Exception {
-
         if (principal == null) {
             return "redirect:/find";
         }
@@ -63,8 +63,15 @@ public class ImageController {
                         .toString())
                 .collect(Collectors.toList());
 
+        if(stringss.size() > 5 ){
+            user.setStrategy(BillingStrategy.largeStrategy());
+        } else {
+            user.setStrategy(BillingStrategy.smallStrategy());
+        }
+
 
         model.addAttribute("files", stringss);
+        model.addAttribute("price", user.strategy.getBillingPrice(10));
 
         return "upload";
     }

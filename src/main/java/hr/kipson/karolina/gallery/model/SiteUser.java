@@ -1,6 +1,10 @@
 package hr.kipson.karolina.gallery.model;
 
+import hr.kipson.karolina.gallery.pricing.BillingStrategy;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,6 +29,7 @@ public class SiteUser {
         this.name = name;
         this.password = password;
         this.enabled = enabled;
+        this.setStrategy(BillingStrategy.smallStrategy());
     }
 
     public Long getId() {
@@ -65,5 +70,13 @@ public class SiteUser {
 
     public void setImageList(Set<Image> imageList) {
         this.imageList = imageList;
+    }
+
+    @Transient
+    public BillingStrategy strategy;
+
+
+    public void setStrategy(BillingStrategy strategy) {
+        this.strategy = strategy;
     }
 }
