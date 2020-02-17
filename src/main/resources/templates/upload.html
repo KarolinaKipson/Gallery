@@ -1,0 +1,91 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<div th:replace="fragments :: header"></div>
+<body>
+<div th:replace="fragments :: head"></div>
+	<div>
+		<form method="POST" enctype="multipart/form-data" action="/">
+			<table>
+				<tr>
+					<td>File to upload:</td>
+					<td><input type="file" id="fileInput" name="file" accept="image/*" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
+
+					<td>&nbsp;	&nbsp;<input type="submit" value="Upload" class="btn-info" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	<div th:each="file : ${files}">
+		<div class="gallery">
+			<a target="_blank" th:href="${file}"> <img th:src="${file}"
+													   height="200" />
+			</a>
+			<div>
+				<form action="/delete" method="POST">
+					<table>
+						&nbsp;	&nbsp;&nbsp;	&nbsp;<input type="text" th:value="*{file}" name="text" readonly="true" />
+						<input type="hidden" th:name="${_csrf.parameterName}"
+							   th:value="${_csrf.token}" />
+
+						<td>&nbsp;	&nbsp;&nbsp;	&nbsp;&nbsp;	&nbsp;&nbsp;	&nbsp;&nbsp;	&nbsp;&nbsp;	&nbsp;&nbsp;	&nbsp;<input type="submit" value="Delete" class="btn-danger"/></td>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script>
+// Used for creating a new FileList in a round-about way
+function FileListItem(a) {
+a = [].slice.call(Array.isArray(a) ? a : arguments)
+for (var c, b = c = a.length, d = !0; b-- && d;) d = a[b] instanceof File
+if (!d) throw new TypeError("expected argument to FileList is File or array of File objects")
+for (b = (new ClipboardEvent("")).clipboardData || new DataTransfer; c--;) b.items.add(a[c])
+return b.files
+}
+
+fileInput.onchange = function change() {
+const file = this.files[0]
+if (!file) return
+
+file.image().then(img => {
+const canvas = document.createElement('canvas')
+const ctx = canvas.getContext('2d')
+const maxWidth = 800 //320
+const maxHeight = 800 //240
+
+// calculate new size
+const ratio = Math.min(maxWidth / img.width, maxHeight / img.height)
+const width = img.width * ratio + .5|0
+const height = img.height * ratio + .5|0
+
+// resize the canvas to the new dimensions
+canvas.width = width
+canvas.height = height
+
+// scale & draw the image onto the canvas
+ctx.drawImage(img, 0, 0, width, height)
+document.body.appendChild(canvas)
+
+// Get the binary (aka blob)
+canvas.toBlob(blob => {
+const resizedFile = new File([blob], file.name, file)
+const fileList = new FileListItem(resizedFile)
+
+// temporary remove event listener since
+// assigning a new filelist to the input
+// will trigger a new change event...
+fileInput.onchange = null
+fileInput.files = fileList
+fileInput.onchange = change
+})
+})
+}
+</script>
+</html>

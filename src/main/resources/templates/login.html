@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<div th:replace="fragments :: header"></div>
+<body>
+<div th:replace="fragments :: head"></div>
+<div class="container padding-login">
+	<div class="row">
+		<div class="col-md-8 order-md-1 offset-3">
+
+		<form th:action="@{/appLogin}" method="POST">
+			<div class="form-row col-md-8 mb-3 ">
+				<label>Username</label>
+				<input type="text" class="form-control" name="app_username">
+			</div>
+			<div class="form-row col-md-8 mb-3 ">
+				<label>Password:</label>
+				<input type="password" class="form-control" name="app_password">
+			</div>
+			<div class="form-row col-md-2 mb-3 offset-3 ">
+			<input type="submit" value="Login" class="btn-info btn-lg" />
+			</div>
+		</form>
+        </div>
+	</div>
+</div>
+
+</body>
+</html>

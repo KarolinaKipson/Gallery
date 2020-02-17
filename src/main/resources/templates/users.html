@@ -1,0 +1,13 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" >
+<div th:replace="fragments :: header"></div>
+<body>
+<div th:replace="fragments :: head"></div>
+	<tr th:each="user : ${users}">
+		<h3 align="center">
+			<td><a th:href="@{search?name=__${user.name}__}"
+				th:text="${user.name} + '\'s photos'">1</a></td>
+		</h3>
+	</tr>
+
+</body>
+</html>
