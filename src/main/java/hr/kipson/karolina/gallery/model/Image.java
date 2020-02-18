@@ -20,6 +20,11 @@ public class Image {
         this.name = name;
     }
 
+    public Image(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
@@ -39,5 +44,31 @@ public class Image {
     @Override
     public String toString() {
         return "Image [id=" + id + ", name=" + name + "]";
+    }
+
+    public static class ImageBuilder{
+        private Long id;
+        private String name;
+
+        public ImageBuilder(){}
+
+        public ImageBuilder(Long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public ImageBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public ImageBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+        public Image build() {
+            return new Image(id, name);
+        }
+
     }
 }

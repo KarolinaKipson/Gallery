@@ -3,13 +3,15 @@ package hr.kipson.karolina.gallery.controller;
 import hr.kipson.karolina.gallery.LoggerImage;
 import hr.kipson.karolina.gallery.iterator.ImageCollection;
 import hr.kipson.karolina.gallery.iterator.Iterator;
-import hr.kipson.karolina.gallery.iterator.PrintImages;
 import hr.kipson.karolina.gallery.model.Image;
 import hr.kipson.karolina.gallery.model.SiteUser;
 import hr.kipson.karolina.gallery.pricing.BillingStrategy;
 import hr.kipson.karolina.gallery.repository.ImageRepository;
 import hr.kipson.karolina.gallery.repository.SiteUserRepository;
 
+import hr.kipson.karolina.gallery.state.HighPriceState;
+import hr.kipson.karolina.gallery.state.LowPriceState;
+import hr.kipson.karolina.gallery.state.PriceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -24,9 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import org.springframework.core.io.ResourceLoader;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,15 +79,32 @@ public class ImageController {
             iterator.next();
         }
 
-        if(imageCount > 5 ){
+        // Strategy patterns
+        if (imageCount > 5 ){
             user.setStrategy(BillingStrategy.largeStrategy());
         } else {
             user.setStrategy(BillingStrategy.smallStrategy());
         }
 
+        // State patterns
+        double priceState = 10;
+        PriceContext priceContext = new PriceContext(new LowPriceState());
+        if(imageCount > 5) {
+            priceContext.change();
+        }
+
+        if(priceContext.getState() instanceof  LowPriceState ) {
+            priceState = priceState/2;
+        }
+        if(priceContext.getState() instanceof HighPriceState) {
+            priceState = priceState*2;
+        }
+
+
+
         model.addAttribute("files", stringss);
         model.addAttribute("price", user.strategy.getBillingPrice(10));
-
+        model.addAttribute("priceState", priceState);
         return "upload";
     }
 
@@ -121,7 +137,7 @@ public class ImageController {
         Set<Image> stringList = user.getImageList();
         stringList.add(new Image(imagePath));
         Files.copy(file.getInputStream(), this.rootLocation.resolve(imagePath));
-
+        // Image image = new Image.ImageBuilder().setId(50l).setName("picture.jpg").build();
         userRepository.save(user);
         LoggerImage logger = LoggerImage.getInstance();
         logger.logUserUploadImage(user);

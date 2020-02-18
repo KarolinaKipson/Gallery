@@ -20,7 +20,8 @@
 		</form>
 	</div>
     <div>
-	 <h3 th:text="'Current price is: $' + ${price}"> </h3>
+	 <h4 th:text="'Current price is: $' + ${price}"> </h4>
+	<h4 th:text="'Current price from state is: $' + ${priceState}"> </h4>
 	</div>
 	<div th:each="file : ${files}">
 		<div class="gallery">
