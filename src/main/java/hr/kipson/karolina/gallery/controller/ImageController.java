@@ -1,6 +1,9 @@
 package hr.kipson.karolina.gallery.controller;
 
 import hr.kipson.karolina.gallery.LoggerImage;
+import hr.kipson.karolina.gallery.iterator.ImageCollection;
+import hr.kipson.karolina.gallery.iterator.Iterator;
+import hr.kipson.karolina.gallery.iterator.PrintImages;
 import hr.kipson.karolina.gallery.model.Image;
 import hr.kipson.karolina.gallery.model.SiteUser;
 import hr.kipson.karolina.gallery.pricing.BillingStrategy;
@@ -36,7 +39,6 @@ import java.util.stream.Collectors;
 @Controller
 public class ImageController {
 
-
     private Logger log = LoggerFactory.getLogger(ImageController.class);
     private SiteUserRepository userRepository;
     private ImageRepository imageRepository;
@@ -63,12 +65,26 @@ public class ImageController {
                         .toString())
                 .collect(Collectors.toList());
 
-        if(stringss.size() > 5 ){
+        var images = new ImageCollection();
+        for (Image i: user.getImageList()) {
+            images.addItem(i);
+        }
+
+        Iterator iterator = images.getIterator();
+
+        int imageCount = 0;
+        while (iterator.hasNext())
+        {
+
+            imageCount++;
+            iterator.next();
+        }
+
+        if(imageCount > 5 ){
             user.setStrategy(BillingStrategy.largeStrategy());
         } else {
             user.setStrategy(BillingStrategy.smallStrategy());
         }
-
 
         model.addAttribute("files", stringss);
         model.addAttribute("price", user.strategy.getBillingPrice(10));
