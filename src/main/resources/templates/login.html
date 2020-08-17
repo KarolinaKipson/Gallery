@@ -9,15 +9,18 @@
 		<form th:action="@{/appLogin}" method="POST">
 			<div class="form-row col-md-8 mb-3 ">
 				<label>Username</label>
-				<input type="text" class="form-control" name="app_username">
+				<input type="text" class="form-control" name="app_username" id="username">
 			</div>
 			<div class="form-row col-md-8 mb-3 ">
 				<label>Password:</label>
-				<input type="password" class="form-control" name="app_password">
+				<input type="password" class="form-control" name="app_password" id="password">
 			</div>
 			<div class="form-row col-md-2 mb-3 offset-3 ">
 			<input type="submit" value="Login" class="btn-info btn-lg" />
 			</div>
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				   th:value="${_csrf.token}" />
+
 		</form>
         </div>
 	</div>

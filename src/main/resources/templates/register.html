@@ -39,7 +39,7 @@ div.gallery img {
 				<li class="nav-item active"><a class="nav-link" href="/users">Users</a></li>
 				<li class="nav-item active"><a class="nav-link" href="/login">Login</a></li>
 				<li class="nav-item active" sec:authorize="isAuthenticated()"><a
-					class="nav-link" href="javascript:$('#logoutForm').submit();">Logout</a></li>
+					class="nav-link" href="javascript:$('#logoutForm').submit()">Logout</a></li>
 				<li class="nav-item active"><a class="nav-link" href="/register">Register</a></li>
 			</ul>
 
@@ -58,11 +58,11 @@ div.gallery img {
 				<form th:action="@{/register}" th:object="${siteUserForm}"  method="post">
 					<div class="form-row col-md-8 mb-3 ">
 						<label>Username</label>
-						<input type="text" class="form-control" th:field="*{name}">
+						<input type="text" class="form-control" th:field="*{name}" id="name">
 					</div>
 					<div class="form-row col-md-8 mb-3 ">
 						<label>Password:</label>
-						<input type="password" class="form-control" th:field="*{password}">
+						<input type="password" class="form-control" th:field="*{password}" id="password">
 					</div>
 					<div class="form-row col-md-2 mb-3 offset-3 ">
 					<input type="submit" value="Register" class="btn-info btn-lg" />

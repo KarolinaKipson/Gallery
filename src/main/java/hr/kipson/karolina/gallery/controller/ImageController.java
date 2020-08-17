@@ -29,7 +29,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -42,10 +44,12 @@ public class ImageController {
     private SiteUserRepository userRepository;
     private ImageRepository imageRepository;
     private Path rootLocation;
+    
 
-    public ImageController(SiteUserRepository userRepository, Path rootLocation, ImageRepository imageRepository) {
+    public ImageController(SiteUserRepository userRepository, ImageRepository imageRepository) {
         this.userRepository = userRepository;
-        this.rootLocation = rootLocation;
+        // todo: get absolute and not fixed path "C:\\workspace\\gallery\\pictures"
+        this.rootLocation = Paths.get("C:\\workspace\\gallery\\pictures");
         this.imageRepository = imageRepository;
     }
 
@@ -62,9 +66,12 @@ public class ImageController {
                 .map(path -> MvcUriComponentsBuilder
                         .fromMethodName(ImageController.class, "serveFile", path.getFileName().toString()).build()
                         .toString())
+                //.sorted(Comparator.comparingLong(Image::getId))
                 .collect(Collectors.toList());
 
+        // Iterator pattern
         var images = new ImageCollection();
+
         for (Image i: user.getImageList()) {
             images.addItem(i);
         }
@@ -79,14 +86,14 @@ public class ImageController {
             iterator.next();
         }
 
-        // Strategy patterns
+        // Strategy pattern
         if (imageCount > 5 ){
             user.setStrategy(BillingStrategy.largeStrategy());
         } else {
             user.setStrategy(BillingStrategy.smallStrategy());
         }
 
-        // State patterns
+        // State pattern
         double priceState = 10;
         PriceContext priceContext = new PriceContext(new LowPriceState());
         if(imageCount > 5) {
@@ -137,9 +144,15 @@ public class ImageController {
         Set<Image> stringList = user.getImageList();
         stringList.add(new Image(imagePath));
         Files.copy(file.getInputStream(), this.rootLocation.resolve(imagePath));
-        // Image image = new Image.ImageBuilder().setId(50l).setName("picture.jpg").build();
-        userRepository.save(user);
+
+        // Builder pattern
+        Image image = new Image.ImageBuilder().setId(50l).setName("picture.jpg").build();
+
+        // Singleton pattern
         LoggerImage logger = LoggerImage.getInstance();
+        logger.logImageFromBuilder(image);
+        userRepository.save(user);
+
         logger.logUserUploadImage(user);
         return "redirect:/";
 
@@ -188,6 +201,8 @@ public class ImageController {
         user.getImageList().remove(image);
 
         userRepository.save(user);
+
+        Files.deleteIfExists(Paths.get(text));
 
         LoggerImage logger = LoggerImage.getInstance();
         logger.logUserDeleteImage(user, image);

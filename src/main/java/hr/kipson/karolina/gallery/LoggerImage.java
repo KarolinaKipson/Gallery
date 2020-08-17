@@ -32,4 +32,8 @@ public class LoggerImage {
     public void logUserUploadImage (SiteUser user) {
         writer.println("User: " + user.getName() + " uploaded neww image.");
     }
+
+    public void logImageFromBuilder (Image image) {
+        writer.println("Image with id " + image.getId() + " and name " + image.getName() + " was built by Builder.");
+    }
 }

@@ -66,6 +66,7 @@ public class Image {
             this.name = name;
             return this;
         }
+
         public Image build() {
             return new Image(id, name);
         }
