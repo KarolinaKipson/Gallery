@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface SiteUserRepository extends JpaRepository<SiteUser, Long>  {
     Optional<SiteUser> findByName(String name);
+    SiteUser save(SiteUser siteUser);
 }

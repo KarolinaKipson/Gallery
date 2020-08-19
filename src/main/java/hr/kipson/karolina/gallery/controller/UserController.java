@@ -3,6 +3,7 @@ package hr.kipson.karolina.gallery.controller;
 import hr.kipson.karolina.gallery.form.SiteUserForm;
 import hr.kipson.karolina.gallery.model.SiteUser;
 import hr.kipson.karolina.gallery.repository.SiteUserRepository;
+import hr.kipson.karolina.gallery.service.SiteUserDetails;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
@@ -56,6 +58,11 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
+        return "login";
+    }
+
+    @GetMapping("/login?logout")
+    public String logout() {
         return "login";
     }
 }

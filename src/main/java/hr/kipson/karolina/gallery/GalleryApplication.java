@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
+import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -21,13 +22,12 @@ public class GalleryApplication {
 
     @Bean
     Path path(){
-        return Paths.get(System.getProperty("java.io.tmpdir"));
+        return Paths.get("C:\\workspace\\gallery\\pictures");
     }
 
     @Bean
     PasswordEncoder getEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

@@ -47,10 +47,8 @@ div.gallery img {
 	</nav>
 
 	<form id="logoutForm" method="post" action="/logout">
-
 		<input type="hidden" th:name="${_csrf.parameterName}"
-			th:value="${_csrf.token}" />
-
+			   th:value="${_csrf.token}" />
 	</form>
 	<div class="container padding-login">
 		<div class="row">
@@ -67,6 +65,8 @@ div.gallery img {
 					<div class="form-row col-md-2 mb-3 offset-3 ">
 					<input type="submit" value="Register" class="btn-info btn-lg" id="register" />
 						</div>
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						   th:value="${_csrf.token}" />
 				</form>
 			</div>
 		</div>

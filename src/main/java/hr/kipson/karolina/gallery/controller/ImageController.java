@@ -14,6 +14,7 @@ import hr.kipson.karolina.gallery.state.LowPriceState;
 import hr.kipson.karolina.gallery.state.PriceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
@@ -41,17 +42,17 @@ import java.util.stream.Collectors;
 public class ImageController {
 
     private Logger log = LoggerFactory.getLogger(ImageController.class);
-    private SiteUserRepository userRepository;
-    private ImageRepository imageRepository;
-    private Path rootLocation;
-    
 
-    public ImageController(SiteUserRepository userRepository, ImageRepository imageRepository) {
+    private final SiteUserRepository userRepository;
+    private final ImageRepository imageRepository;
+    private final Path rootLocation;
+
+    public ImageController(SiteUserRepository userRepository, ImageRepository imageRepository, Path rootLocation) {
         this.userRepository = userRepository;
-        // todo: get absolute and not fixed path "C:\\workspace\\gallery\\pictures"
-        this.rootLocation = Paths.get("C:\\workspace\\gallery\\pictures");
         this.imageRepository = imageRepository;
+        this.rootLocation = rootLocation;
     }
+
 
     @GetMapping("/")
     public String listUploadedFiles(Model model, Principal principal) throws Exception {
@@ -81,7 +82,6 @@ public class ImageController {
         int imageCount = 0;
         while (iterator.hasNext())
         {
-
             imageCount++;
             iterator.next();
         }
@@ -106,8 +106,6 @@ public class ImageController {
         if(priceContext.getState() instanceof HighPriceState) {
             priceState = priceState*2;
         }
-
-
 
         model.addAttribute("files", stringss);
         model.addAttribute("price", user.strategy.getBillingPrice(10));
@@ -155,7 +153,6 @@ public class ImageController {
 
         logger.logUserUploadImage(user);
         return "redirect:/";
-
     }
 
     @GetMapping("/find")
@@ -184,7 +181,6 @@ public class ImageController {
         model.addAttribute("user", user.getName());
 
         return "findphoto";
-
     }
 
     @RequestMapping("/delete")
@@ -208,6 +204,5 @@ public class ImageController {
         logger.logUserDeleteImage(user, image);
         log.info("Image deleted from system.");
         return "redirect:/";
-
     }
 }

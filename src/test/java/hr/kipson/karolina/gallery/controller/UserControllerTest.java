@@ -1,10 +1,12 @@
 package hr.kipson.karolina.gallery.controller;
 
+import hr.kipson.karolina.gallery.service.SiteUserDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 public class UserControllerTest {
+
+    @MockBean
+    SiteUserDetails siteuserdetails;
 
     @Autowired
     MockMvc mockMvc;
@@ -40,8 +45,8 @@ public class UserControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
-
     }
+
     @Test
     public void invalidUserLogin() throws Exception {
         this.mockMvc
@@ -56,8 +61,8 @@ public class UserControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
-
     }
+
     @Test
     public void findAllUsers() throws Exception {
         this.mockMvc
@@ -66,5 +71,4 @@ public class UserControllerTest {
                 )
                 .andExpect(status().isOk());
     }
-
 }
