@@ -1,6 +1,7 @@
 package hr.kipson.karolina.gallery.controller;
 
 import hr.kipson.karolina.gallery.LoggerImage;
+import hr.kipson.karolina.gallery.aop.TrackExecutionTime;
 import hr.kipson.karolina.gallery.iterator.ImageCollection;
 import hr.kipson.karolina.gallery.iterator.Iterator;
 import hr.kipson.karolina.gallery.model.Image;
@@ -53,7 +54,7 @@ public class ImageController {
         this.rootLocation = rootLocation;
     }
 
-
+    @TrackExecutionTime
     @GetMapping("/")
     public String listUploadedFiles(Model model, Principal principal) throws Exception {
         if (principal == null) {
@@ -113,6 +114,7 @@ public class ImageController {
         return "upload";
     }
 
+    @TrackExecutionTime
     @GetMapping(value="/files/{filename:.+}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
@@ -125,6 +127,7 @@ public class ImageController {
                 .body(resource);
     }
 
+    @TrackExecutionTime
     @PostMapping("/")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
                                    Principal principal) throws Exception {
@@ -155,11 +158,13 @@ public class ImageController {
         return "redirect:/";
     }
 
+    @TrackExecutionTime
     @GetMapping("/find")
     public String findPhotos(Model model) {
         return "findphoto";
     }
 
+    @TrackExecutionTime
     @GetMapping("/search")
     public String findPhotos(@RequestParam("name") String name, Model model)  {
 
@@ -183,6 +188,7 @@ public class ImageController {
         return "findphoto";
     }
 
+    @TrackExecutionTime
     @RequestMapping("/delete")
     public String findPhotos(Principal principal, @RequestParam("text") String text, String string) throws Exception {
 
